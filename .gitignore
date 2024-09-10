@@ -1,0 +1,15 @@
+# IDE and text editor files
+/.idea/
+/.vscode/
+
+
+# Node modules
+/front/node_modules/
+/api/node_modules/
+
+# Build files
+/api/dist/
+/front/dist/
+
+# Misc
+.DS_Store
