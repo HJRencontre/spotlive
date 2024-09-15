@@ -2,9 +2,9 @@ name: test
 
 on:
   push:
-    branches: [ "main", "develop", "preprod" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "main", "develop", "preprod" ]
+    branches: [ "main" ]
 
 jobs:
   backend-build:
@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 22.x]
+        node-version: [22.x]
 
     steps:
     - uses: actions/checkout@v4
@@ -32,7 +32,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 22.x]
+        node-version: [22.x]
 
     steps:
     - uses: actions/checkout@v4
