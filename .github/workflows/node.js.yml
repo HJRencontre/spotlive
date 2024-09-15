@@ -22,9 +22,9 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: cd spotlive/api && npm ci
-    - run: cd spotlive/api && npm run build --if-present
-    - run: cd spotlive/api && npm test
+    - run: cd api && npm ci
+    - run: cd api && npm run build --if-present
+    - run: cd api && npm test
 
   frontend-build:
 
@@ -41,6 +41,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: cd spotlive/front && npm ci
-    - run: cd spotlive/front && npm run build --if-present
-    - run: cd spotlive/front && npm test
+    - run: cd front && npm ci
+    - run: cd front && npm run build --if-present
+    - run: cd front && npm test
