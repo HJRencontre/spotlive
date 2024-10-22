@@ -1,6 +1,17 @@
 version: "3.9"
 
 services:
+  reverse-proxy:
+      image: traefik:v3.2
+      command:
+        - "--api.insecure=true"
+        - "--providers.docker=true"
+        - "--entrypoints.web.address=:80"
+      ports:
+        - "80:80"
+        - "8080:8080"
+      volumes:
+        - "/var/run/docker.sock:/var/run/docker.sock"
   api:
     build:
       context: .
@@ -10,6 +21,10 @@ services:
     volumes:
       - ./api:/app/api
       - /app/api/node_modules
+    labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.api.rule=Host(`api.localhost`)"
+        - "traefik.http.services.api.loadbalancer.server.port=3000"
   front:
     build:
       context: .
@@ -19,3 +34,7 @@ services:
     volumes:
       - ./front:/app/front
       - /app/front/node_modules
+    labels:
+        - "traefik.enable=true"
+        - "traefik.hnpxttp.routers.front.rule=Host(`front.localhost`)"
+        - "traefik.http.services.front.loadbalancer.server.port=5173"
