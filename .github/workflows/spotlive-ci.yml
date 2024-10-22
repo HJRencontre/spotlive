@@ -1,0 +1,42 @@
+name: spotlive-ci
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  dependencies:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: api/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('api/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+          cache: 'npm'
+
+      - run: cd api && npm ci
+        name: Install dependencies
+
+      - run: cd api && npm run build --if-present
+        name: Build API
+
+      - run: cd api && npm test
+        name: Run tests
+
+    strategy:
+      matrix:
+        node-version: [22.x]
+      fail-fast: false
