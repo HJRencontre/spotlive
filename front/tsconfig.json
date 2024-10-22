@@ -1,7 +1,10 @@
 {
   "compilerOptions": {
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
     "esModuleInterop": true,
     "module": "nodenext",
+    "skipLibCheck": true,
     "jsx": "react-jsx"
   }
 }
