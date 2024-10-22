@@ -2,9 +2,9 @@ name: spotlive-ci
 
 on:
   push:
-    branches: [ "main", "develop", "feature/*" ]
+    branches: [ "main", "develop" ]
   pull_request:
-    branches: [ "main", "develop", "feature/*" ]
+    branches: [ "main", "develop" ]
 
 jobs:
   dependencies:
