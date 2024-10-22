@@ -8,6 +8,10 @@
     "strict": true
   },
   "files": [],
+  "include": [
+    "cypress/**/*.ts",
+    "src/**/*.ts"
+  ],
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
