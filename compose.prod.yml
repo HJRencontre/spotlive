@@ -46,7 +46,7 @@ services:
       context: .
       dockerfile: docker/front/Dockerfile.prod
     expose:
-      - "80"
+      - "8081:8081"
     networks:
       - web
     labels:
@@ -54,7 +54,7 @@ services:
       - "traefik.http.routers.app.rule=Host(`app.spotlive.fr`)"
       - "traefik.http.routers.app.entrypoints=websecure"
       - "traefik.http.routers.app.tls.certresolver=myresolver"
-      - "traefik.http.services.app.loadbalancer.server.port=80"
+      - "traefik.http.services.app.loadbalancer.server.port=8081"
 
 networks:
   web:
