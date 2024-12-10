@@ -18,4 +18,4 @@ async function bootstrap() {
 }
 
 bootstrap()
-  .then(() => console.log('Server is running on http://localhost:3000, API documentation is available on http://localhost:3000/api-docs'))
+  .then(() => console.log('API documentation is available on /api-docs'))
