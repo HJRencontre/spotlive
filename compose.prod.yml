@@ -7,7 +7,7 @@ services:
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
       - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
-      - "--certificatesresolvers.myresolver.acme.email=contact@spotlive.fr"
+      - "--certificatesresolvers.myresolver.acme.email=h.jrencontre@gmail.com"
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
     ports:
       - "80:80"
@@ -45,8 +45,8 @@ services:
     build:
       context: .
       dockerfile: docker/front/Dockerfile.prod
-    ports:
-      - "8081:8081"
+    expose:
+      - "80"
     networks:
       - web
     labels:
@@ -54,7 +54,7 @@ services:
       - "traefik.http.routers.app.rule=Host(`app.spotlive.fr`)"
       - "traefik.http.routers.app.entrypoints=websecure"
       - "traefik.http.routers.app.tls.certresolver=myresolver"
-      - "traefik.http.services.app.loadbalancer.server.port=8081"
+      - "traefik.http.services.app.loadbalancer.server.port=80"
 
 networks:
   web:
