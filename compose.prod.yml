@@ -8,7 +8,7 @@ services:
       - "--entrypoints.websecure.address=:443"
       - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
       # - "--certificatesresolvers.myresolver.acme.tlschallenge.entrypoint=websecure"
-      - "--certificatesresolvers.myresolver.acme.email=h.jrencontre@gmail.com"
+      - "--certificatesresolvers.myresolver.acme.email=h.jrencontre@outlook.com"
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
     ports:
       - "80:80"
@@ -25,11 +25,10 @@ services:
       - "traefik.http.routers.reverse-proxy.service=api@internal"
       - "traefik.http.routers.reverse-proxy.entrypoints=websecure"
       - "traefik.http.routers.reverse-proxy.tls.certresolver=myresolver"
-      - "traefik.http.routers.reverse-proxy.tls=true"
-      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
-      - "traefik.http.routers.redirs.rule=hostregexp(`{host:.+}`)"
-      - "traefik.http.routers.redirs.rule.entrypoints=web"
-      - "traefik.http.routers.redirs.middlewares=redirect-to-https"
+      #- "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      #- "traefik.http.routers.redirs.rule=hostregexp(`{host:.+}`)"
+      #- "traefik.http.routers.redirs.rule.entrypoints=web"
+      #- "traefik.http.routers.redirs.middlewares=redirect-to-https"
 
 #  api:
 #    build:
