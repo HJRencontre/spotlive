@@ -13,3 +13,6 @@
 
 # Misc
 .DS_Store
+/front/tsconfig.app.tsbuildinfo
+/front/tsconfig.node.tsbuildinfo
+/front/tsconfig.tsbuildinfo
