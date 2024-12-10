@@ -7,7 +7,6 @@ services:
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
       - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
-      # - "--certificatesresolvers.myresolver.acme.tlschallenge.entrypoint=websecure"
       - "--certificatesresolvers.myresolver.acme.email=h.jrencontre@outlook.com"
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
     ports:
@@ -25,47 +24,37 @@ services:
       - "traefik.http.routers.reverse-proxy.service=api@internal"
       - "traefik.http.routers.reverse-proxy.entrypoints=websecure"
       - "traefik.http.routers.reverse-proxy.tls.certresolver=myresolver"
-      #- "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
-      #- "traefik.http.routers.redirs.rule=hostregexp(`{host:.+}`)"
-      #- "traefik.http.routers.redirs.rule.entrypoints=web"
-      #- "traefik.http.routers.redirs.middlewares=redirect-to-https"
+        
+  api:
+    build:
+      context: .
+      dockerfile: docker/api/Dockerfile.prod
+    restart: always
+    ports:
+      - "3000:3000"
+    networks:
+      - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.api.rule=Host(`api.spotlive.fr`)"
+      - "traefik.http.routers.api.entrypoints=websecure"
+      - "traefik.http.routers.api.tls.certresolver=myresolver"
+      - "traefik.http.services.api.loadbalancer.server.port=3000"
 
-#  api:
-#    build:
-#      context: .
-#      dockerfile: docker/api/Dockerfile.prod
-#    restart: always
-#    ports:
-#      - "3000:3000"
-#    networks:
-#      - web
-#    labels:
-#      - "traefik.enable=true"
-#      - "traefik.http.routers.api.rule=Host(`api.spotlive.fr`)"
-#      - "traefik.http.routers.api.entrypoints=webscure"
-#      - "traefik.http.routers.api.middlewares=redirect-to-https"
-#      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
-#      - "traefik.http.services.api.loadbalancer.server.port=3000"
-#      - "traefik.http.routers.api.tls=true"
-#      - "traefik.http.routers.api.tls.certresolver=myresolver"
-
-#  front:
-#    build:
-#      context: .
-#      dockerfile: docker/front/Dockerfile.prod
-#    ports:
-#      - "8081:8081"
-#    networks:
-#      - web
-#    labels:
-#      - "traefik.enable=true"
-#      - "traefik.http.routers.front.rule=Host(`app.spotlive.fr`)"
-#      - "traefik.http.routers.front.entrypoints=web"
-#      - "traefik.http.routers.front.middlewares=redirect-to-https"
-#      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
-#      - "traefik.http.services.front.loadbalancer.server.port=8081"
-#      - "traefik.http.routers.front.tls=true"
-#      - "traefik.http.routers.front.tls.certresolver=myresolver"
+  front:
+    build:
+      context: .
+      dockerfile: docker/front/Dockerfile.prod
+    ports:
+      - "8081:8081"
+    networks:
+      - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.app.rule=Host(`app.spotlive.fr`)"
+      - "traefik.http.routers.app.entrypoints=websecure"
+      - "traefik.http.routers.app.tls.certresolver=myresolver"
+      - "traefik.http.services.app.loadbalancer.server.port=8081"
 
 networks:
   web:
