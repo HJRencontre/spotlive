@@ -1,39 +1,11 @@
 services:
-  reverse-proxy:
-    image: traefik:v3.2
-    command:
-      - "--api.insecure=false"
-      - "--providers.docker=true"
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443"
-      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
-      - "--certificatesresolvers.myresolver.acme.email=h.jrencontre@gmail.com"
-      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
-    ports:
-      - "80:80"
-      - "8080:8080"
-      - "443:443"
-    networks:
-      - web
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
-      - "./letsencrypt:/letsencrypt"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.reverse-proxy.rule=Host(`traefik.spotlive.fr`)"
-      - "traefik.http.routers.reverse-proxy.service=api@internal"
-      - "traefik.http.routers.reverse-proxy.entrypoints=websecure"
-      - "traefik.http.routers.reverse-proxy.tls.certresolver=myresolver"
-        
   api:
     build:
       context: .
       dockerfile: docker/api/Dockerfile.prod
     restart: always
-    ports:
-      - "3000:3000"
     networks:
-      - web
+      - coolify
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.api.rule=Host(`api.spotlive.fr`)"
@@ -46,16 +18,30 @@ services:
       context: .
       dockerfile: docker/front/Dockerfile.prod
     expose:
-      - "8081:8081"
+      - "8081"
     networks:
-      - web
+      - coolify
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.app.rule=Host(`app.spotlive.fr`)"
-      - "traefik.http.routers.app.entrypoints=websecure"
-      - "traefik.http.routers.app.tls.certresolver=myresolver"
-      - "traefik.http.services.app.loadbalancer.server.port=8081"
+      - "traefik.http.routers.front.rule=Host(`app.spotlive.fr`)"
+      - "traefik.http.routers.front.entrypoints=websecure"
+      - "traefik.http.routers.front.tls.certresolver=myresolver"
+      - "traefik.http.services.front.loadbalancer.server.port=8081"
+
+  traefik-dashboard:
+    image: traefik:v3.2
+    command:
+      - "--api=true"
+      - "--api.dashboard=true"
+    networks:
+      - coolify
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.spotlive.fr`)"
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik.entrypoints=websecure"
+      - "traefik.http.routers.traefik.tls.certresolver=myresolver"
 
 networks:
-  web:
-    external: false
+  coolify:
+    external: true
