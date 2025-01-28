@@ -2,7 +2,7 @@ services:
   api:
     build:
       context: .
-      dockerfile: docker/api/Dockerfile.dev
+      dockerfile: docker/api/Dockerfile.prod
     restart: always
     ports:
       - "3000:3000"
@@ -12,9 +12,9 @@ services:
   front:
     build:
       context: .
-      dockerfile: docker/front/Dockerfile.dev
+      dockerfile: docker/front/Dockerfile.prod
     ports:
-      - "5173:5173"
+      - "8081:8081"
     networks:
       - web
 
