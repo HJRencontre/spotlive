@@ -4,44 +4,20 @@ services:
       context: .
       dockerfile: docker/api/Dockerfile.prod
     restart: always
+    ports:
+      - "3000:3000"
     networks:
-      - coolify
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.api.rule=Host(`api.spotlive.fr`)"
-      - "traefik.http.routers.api.entrypoints=websecure"
-      - "traefik.http.routers.api.tls.certresolver=myresolver"
-      - "traefik.http.services.api.loadbalancer.server.port=3000"
+      - web
 
   front:
     build:
       context: .
       dockerfile: docker/front/Dockerfile.prod
-    expose:
-      - "8081"
+    ports:
+      - "8081:8081"
     networks:
-      - coolify
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.front.rule=Host(`app.spotlive.fr`)"
-      - "traefik.http.routers.front.entrypoints=websecure"
-      - "traefik.http.routers.front.tls.certresolver=myresolver"
-      - "traefik.http.services.front.loadbalancer.server.port=8081"
-
-  traefik-dashboard:
-    image: traefik:v3.2
-    command:
-      - "--api=true"
-      - "--api.dashboard=true"
-    networks:
-      - coolify
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.traefik.rule=Host(`traefik.spotlive.fr`)"
-      - "traefik.http.routers.traefik.service=api@internal"
-      - "traefik.http.routers.traefik.entrypoints=websecure"
-      - "traefik.http.routers.traefik.tls.certresolver=myresolver"
+      - web
 
 networks:
-  coolify:
-    external: true
+  web:
+    external: false

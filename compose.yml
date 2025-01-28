@@ -1,22 +1,4 @@
 services:
-  reverse-proxy:
-    image: traefik:v3.2
-    command:
-      - "--api.insecure=true"
-      - "--providers.docker=true"
-      - "--entrypoints.web.address=:80"
-    ports:
-      - "80:80"
-    networks:
-      - web
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
-    labels:
-        - "traefik.enable=true"
-        - "traefik.http.routers.traefik.rule=Host(`traefik.localhost`)"
-        - "traefik.http.routers.traefik.entrypoints=web"
-        - "traefik.http.services.traefik.loadbalancer.server.port=8080"
-
   api:
     build:
       context: .
@@ -26,11 +8,6 @@ services:
       - "3000:3000"
     networks:
       - web
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.api.rule=Host(`api.localhost`)"
-      - "traefik.http.routers.api.entrypoints=web"
-      - "traefik.http.services.api.loadbalancer.server.port=3000"
 
   front:
     build:
@@ -40,11 +17,6 @@ services:
       - "5173:5173"
     networks:
       - web
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.front.rule=Host(`front.localhost`)"
-      - "traefik.http.routers.front.entrypoints=web"
-      - "traefik.http.services.front.loadbalancer.server.port=5173"
 
 networks:
   web:
