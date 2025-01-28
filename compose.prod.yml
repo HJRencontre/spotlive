@@ -14,7 +14,7 @@ services:
       context: .
       dockerfile: docker/front/Dockerfile.prod
     ports:
-      - "8081:8081"
+      - "8081:80"
     networks:
       - web
 
