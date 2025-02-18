@@ -1,15 +1,12 @@
-name: Build Frontend
+name: Install Dependencies
 
 on:
-  push:
-    branches: [ "main", "develop" ]
-  pull_request:
-    branches: [ "main", "develop" ]
+  workflow_call:
 
 jobs:
-  build_front:
+  install_dependencies:
     runs-on: ubuntu-latest
-    needs: install_dependencies
+
     steps:
       - uses: actions/checkout@v4
 
@@ -18,7 +15,7 @@ jobs:
         with:
           node-version: '22.x'
 
-      - name: Restore node_modules cache
+      - name: Cache node_modules
         uses: actions/cache@v4
         with:
           path: front/node_modules
@@ -26,5 +23,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node_modules-
 
-      - run: cd front && npm run build --if-present
-        name: Build front
+      - name: Cache Cypress binary
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/Cypress
+          key: ${{ runner.os }}-cypress-${{ hashFiles('front/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-cypress-
+
+      - run: cd front && npm ci
+        name: Install dependencies

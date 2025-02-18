@@ -1,0 +1,15 @@
+name: Main Workflow
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+
+jobs:
+  call-install-dependencies:
+    uses: ./.github/workflows/install-dependencies.yml
+
+  call-build-frontend:
+    needs: call-install-dependencies
+    uses: ./.github/workflows/build.yml
