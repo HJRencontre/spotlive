@@ -1,4 +1,4 @@
-name: Main Workflow
+name: CI
 
 on:
   push:
@@ -8,8 +8,8 @@ on:
 
 jobs:
   call-install-dependencies:
-    uses: ./.github/workflows/install-dependencies.yml
+    uses: ./.github/workflows/front/install-dependencies.yml
 
   call-build-frontend:
     needs: call-install-dependencies
-    uses: ./.github/workflows/build.yml
+    uses: ./.github/workflows/front/build.yml
