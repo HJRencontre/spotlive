@@ -11,5 +11,5 @@ jobs:
     uses: ./.github/workflows/front-install-dependencies.yml
 
   front-build:
-    needs: install-front-dependencies
+    needs: front-install-dependencies
     uses: ./.github/workflows/front-build.yml
