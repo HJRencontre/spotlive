@@ -1,51 +1,46 @@
 services:
-  reverse-proxy:
-    image: traefik:v3.2
-    command:
-      - "--api.insecure=true"
-      - "--providers.docker=true"
-      - "--entrypoints.web.address=:80"
-    ports:
-      - "80:80"
-    networks:
-      - web
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
-    labels:
-        - "traefik.enable=true"
-        - "traefik.http.routers.traefik.rule=Host(`traefik.localhost`)"
-        - "traefik.http.routers.traefik.entrypoints=web"
-        - "traefik.http.services.traefik.loadbalancer.server.port=8080"
-
   api:
     build:
       context: .
       dockerfile: docker/api/Dockerfile.dev
+    volumes:
+      - ./api:/app/api
+      - /app/api/node_modules
     restart: always
     ports:
       - "3000:3000"
     networks:
       - web
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.api.rule=Host(`api.localhost`)"
-      - "traefik.http.routers.api.entrypoints=web"
-      - "traefik.http.services.api.loadbalancer.server.port=3000"
 
   front:
     build:
       context: .
       dockerfile: docker/front/Dockerfile.dev
+    volumes:
+      - ./front:/app/front
+      - /app/front/node_modules
     ports:
       - "5173:5173"
     networks:
       - web
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.front.rule=Host(`front.localhost`)"
-      - "traefik.http.routers.front.entrypoints=web"
-      - "traefik.http.services.front.loadbalancer.server.port=5173"
+
+  db:
+    image: postgres:17.2
+    restart: always
+    ports:
+        - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+        POSTGRES_USER: ${POSTGRES_USER}
+        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+        POSTGRES_DB: ${POSTGRES_DB}
+    networks:
+      - web
 
 networks:
   web:
     external: false
+
+volumes:
+  postgres_data:
